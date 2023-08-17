@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<style>
+    @media screen and (min-width: 1200px) {
+       
+        #mm {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+    
+
+    }
+    .ssa{
+        background-color:crimson !important;
+        padding: 10px 30px;
+        border: none;
+      }
+</style>
+
+
+
+<div class="container" id="mm" style="padding-bottom: 80px">
+    <h3 style="text-align:center; padding:50px 0px 20px 0px">All Vacancies</h3>
+    <form method="get" class="row">
+        <div class="col-lg-3">
+            <label for="{{ search_form.title.id_for_label }}">Title:</label>
+            {{ search_form.title }}
+        </div>
+        <div class="col-lg-3">
+            <label for="{{ search_form.location.id_for_label }}">Location:</label>
+            {{ search_form.location }}
+        </div>
+        <div class="col-lg-3">
+            <label for="{{ search_form.region.id_for_label }}">Region:</label>
+            {{ search_form.region }}
+        </div>
+        <div class="col-lg-3" style="padding-top: 20px!important">
+            <button class='ssa' type="submit" >Search</button>
+        </div>
+    </form>
+    
+    
+    <div class="row">
+        {% for profile in featured_vacancies %}
+        <div class="col-xl-3">
+            <!-- ... existing code ... -->
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+
+
+<div class="container">
+    <div class="row">
+        {% for vacancy in featured_vacancies %}
+        {% if vacancy.is_approved %} 
+        <div class="col-xl-3">
+            <a style="color: red" href="{% url 'details' vacancy.pk %}">
+                <div class="card" style="width: 18rem;">
+                    <img style='height: 11rem' class="card-img-top" src="{{ vacancy.company_logo.url }}" alt="{{ vacancy.title }} Image">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ vacancy.title }}</h5>
+                        <ul class="list-unstyled">
+                            <li><i class="fa fa-clock"></i> {{ vacancy.deadline }}</li>
+                            <li><i class="fa fa-map-marker"></i> {{ vacancy.location }}</li>
+                            <li><i class="fa fa-book"></i> {{ vacancy.categories }}</li>
+                        </ul>
+                        <a style="color: green;font-weight:800; margin:0px auto; padding: 20px 0px 0px 60px" href="{% url 'details' vacancy.pk %}" >View Details</a>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endif %}  <!-- Close the if statement -->
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

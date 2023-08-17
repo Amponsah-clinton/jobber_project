@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+
+
+<div class="container" style="padding:60px 0px 30px 0px">
+    <div class="row mb-4">
+        <div class="col-md-6 offset-md-3">
+            <form method="GET" action="{% url 'profile_list' %}">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="q" placeholder="Search by title or location" value="{{ request.GET.q }}">
+                    <select class="form-control" name="region">
+                        <option value="">All Regions</option>
+                        {% for value, label in profiles.model.REGIONS_CHOICES %}
+                            <option value="{{ value }}" {% if request.GET.region == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="submit">Search</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+        
+    <div class="container">
+        <div class="row ">
+               {% if profiles %}
+    {% for profile in profiles %}
+    {% if profile.is_approved %} 
+           <div class="col-xl-6">
+ <a style="color:red" href="{% url 'job_details' profile.pk %}">   <div class="featured-profiles-wrapper">
+        <div class="single-job-items mb-30" style="background-color: white">
+            <div class="job-items">
+                    <div class="company-img">
+                        {% if profile.sex == 'Male' %}
+                       <img style="height: 70px; width: 61px" src="{% static 'img/man.png' %}">
+                        {% elif profile.sex == 'Female' %}
+                        <img style="height: 67 px; width: 41px" src="{% static 'img/woman.jpg' %}">
+
+                        {% else %}
+                        <!-- Handle the 'Other' or other cases here -->
+                        {% endif %}
+                        <img src="{{ profile.image.url }}" alt="">
+                    </div>
+                <div class="job-tittle">
+                    <h4>{{ profile.title }}</h4>
+                    <ul>
+                        <li><i class="fa fa-clock"></i>{{ profile.availability_type }}</li>
+                        <li><i class="fa fa-map-marker"></i>{{ profile.location }}</li>
+                        <li><i class="fa fa-money"></i>{{ profile.region }}</li>
+                        <li><i class="fa fa-book"></i>{{ profile.category }}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+                      </a> 
+
+</div>
+{% endif %}
+    {% endfor %}
+{% else %}
+            <div class="col-md-12" style="padding: 50px 0px 80px 0px">
+                <h3 class="text-center;text-align:center ">No results found for '{{ request.GET.q }}'.</h3>
+            </div>
+        {% endif %}
+        </div>
+    </div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const searchInput = document.querySelector("input[name='q']");
+    const searchForm = document.getElementById("search-form");
+
+    searchInput.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            searchForm.submit();
+        }
+    });
+});
+</script>
+
+
+
+
+    {% endblock %}

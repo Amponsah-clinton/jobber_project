@@ -1,0 +1,186 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+        
+<style>
+    #background-div {
+        background-image: url('/static/img/about.jpg');
+    }
+    </style>
+            
+        <div class="slider-area ">
+            <div class="single-slider section-overly slider-height2 d-flex align-items-center" id="background-div" data-background="static/img/hero/about.jpg">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xl-12">
+                            <div class="hero-cap text-center">
+                                <h2>{{post}} Details</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+  
+
+        <div class="job-post-company pt-120 pb-120">
+            <div class="container">
+                <div class="row justify-content-between">
+                    <!-- Left Content -->
+                    <div class="col-xl-7 col-lg-8">
+                        <!-- job single -->
+                        <div class="single-job-items mb-50">
+                            <div class="job-items">
+                                     <div class="company-img">
+                                    {% if post.sex == 'Male' %}
+                                <img style="height: 70px; width: 69px" src="{% static 'img/man.png' %}">
+                                    {% elif post.sex == 'Female' %}
+                                <img style="height: 70px; width: 62px" src="{% static 'img/woman.jpg' %}">
+                                    {% else %}
+                                    <!-- Handle the 'Other' or other cases here -->
+                                    {% endif %}
+                                    <img src="{{ post.image.url }}" alt="">
+                                </div>
+                                <div class="job-tittle">
+                                    <a href="job_details.html"><h4>{{post.title}}</h4></a>
+                                    <ul>
+                                        <li><i class="fa fa-clock"></i>{{post.availability_type}} </li>
+                                        <li><i class="fa fa-map-marker"></i>{{post.location}}</li>
+                                        <li><i class="fa fa-money"></i>{{post.charges}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                          <!-- job single End -->
+                       
+                        <div class="job-post-details">
+                            <div class="post-details1 mb-50">
+                                <!-- Small Section Tittle -->
+                                <div class="small-section-tittle">
+                                    <h4>Job Description</h4>
+                                </div>
+                                <p>{{post.description}}</p>
+                            </div>
+                            <div class="post-details2  mb-50">
+                                 <!-- Small Section Tittle -->
+                                <div class="small-section-tittle">
+                                    <h4>Required Knowledge, Skills, and Abilities</h4>
+                                </div>
+                               <ul>
+                                   <li>{{post.skills_abilities}}</li>
+                               </ul>
+                            </div>
+                            <div class="post-details2 mb-50">
+                                <img class="img-fluid" src="{{post.sample_works.url}}" alt="Sample Work">
+                            </div>
+                            
+                        </div>
+
+                    </div>
+                    <!-- Right Content -->
+                    <div class="col-xl-4 col-lg-4">
+                        <div class="post-details3  mb-50">
+                            <!-- Small Section Tittle -->
+                           <div class="small-section-tittle">
+                               <h4>Job Overview</h4>
+                           </div>
+                          <ul>
+                              <li>Posted date : <span>{{post.date_posted}}</span></li>
+                              <li>Location : <span>{{post.region}}</span></li>
+                              <li>Age : <span>{{post.age}}</span></li>
+                              <li>Education level : <span>{{post.education_level}}</span></li>
+                              <li>Sex :  <span>{{post.sex}}</span></li>
+                        
+                          </ul>
+                       </div>
+
+                       {% if user.is_authenticated %}
+                        <div class="post-details4  mb-50">
+                            <!-- Small Section Tittle -->
+                            <div class="small-section-tittle">
+                                <h4>Profile Information</h4>
+                            </div>
+                            <ul>
+                                <li>Name: <span>{{ post.name }}</span></li>
+                                <li>Email : <span>{{ post.email }}</span></li>
+                                <li>Phone: <span>{{ post.phone_number }}</span></li>
+                            </ul>
+                        </div>
+                        {% else %}
+                       <h5>Please <a style="color:red; font-weight: 700" href="{% url 'user_login' %}">Login</a> or <a style="color:red; font-weight: 700" href="{% url 'user_signup' %}">Register</a> to view contact information</h5>
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- job post company End -->
+
+    </main>
+
+
+{% if user.is_authenticated or user.is_superuser  %}
+<div class="container" id="mm">
+<h3 style="text-align:center">Report Profile</h3>
+<form method="post">
+    {% csrf_token %}
+    {{ report_form.as_p }}
+    <button type="submit" class="btn btn-primary" name="report_form">Submit Report</button>
+</form>
+</div>
+{% else %}
+<h5 class="text-center" style="text-center; padding: 0px 0px 50px 0px">Please <a style="color:red; font-weight: 700" href="{% url 'user_login' %}">Login</a> or <a style="color:red; font-weight: 700" href="{% url 'user_signup' %}">Register</a> to view report profile</h5>
+{% endif %}
+
+
+
+<style>
+    @media screen and (min-width: 1200px) {
+       
+        #mm {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+    }
+</style>
+
+
+<br><br><br>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Display existing comments -->
+<div class="comments-section">
+    <h4>Comments</h4>
+    <ul>
+        {% for comment in comments %}
+            <li>{{ comment.user.username }} - {{ comment.date }}: {{ comment.message }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<!-- Comment form -->
+<div class="comment-form">
+    <h4>Add a Comment</h4>
+    <form method="post">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <button type="submit">Post Comment</button>
+    </form>
+</div>
+    {% endblock %}
